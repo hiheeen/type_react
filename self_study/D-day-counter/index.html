@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="./index.css">
+    <script src="./dist/dateForm.js" defer></script>
+</head>
+<body>
+    <h1>D-day</h1>
+    <div id="d-day-container">
+        <div class="d-day-child-container">
+            <span id="days"></span>
+            <span>일</span>
+        </div>
+        <div class="d-day-child-container">
+            <span id="hours"></span>
+            <span>시간</span>
+        </div>
+        <div class="d-day-child-container">
+            <span id="minutes"></span>
+            <span>분</span>
+        </div>
+        <div class="d-day-child-container">
+            <span id="seconds"></span>
+            <span>초</span>
+        </div>
+    </div>
+    <div id="d-day-message"></div>
+    <div id="target-selector">
+        <input id="target-year-input" class="target-input"/> -
+        <input id="target-month-input" class="target-input"/> -
+        <input id="target-day-input" class="target-input"/>
+    </div>
+    <button onclick="countMaker()" id="start-btn">카운트다운 시작</button>
+</body>
+</html>
