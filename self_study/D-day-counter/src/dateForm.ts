@@ -113,13 +113,6 @@ const setClearInterval = () :void=> {
         clearInterval(intervalIdArr[i]);
     }
 }
-if (savedDate){
-    starter(savedDate);
-} // 처음 렌더링될 때 localStorage에 저장된 값이 있으면 starter함수 실행
-else {
-    container.style.display = 'none';
-    message.innerHTML = '<h3>D-day를 입력해주세요.</h3>';
-}
 
 const resetTimer = () => {
     container.style.display = 'none';
@@ -130,6 +123,14 @@ const resetTimer = () => {
        inputValueObj[key as keyof InputValue].value = '';
     }
 }
+if (savedDate){
+    starter(savedDate);
+} // 처음 렌더링될 때 localStorage에 저장된 값이 있으면 starter함수 실행
+else {
+    container.style.display = 'none';
+    message.innerHTML = '<h3>D-day를 입력해주세요.</h3>';
+}
+
 // setTimeout의 실행방식에 대한 견해 
 // for (let i = 0; i<100; i++) {
 //     setTimeout(()=> {
