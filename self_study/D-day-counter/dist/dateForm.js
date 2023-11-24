@@ -4,27 +4,35 @@ container.style.display = 'none';
 const message = document.querySelector('#d-day-message');
 message.innerHTML = '<h3>D-day를 입력해주세요.</h3>';
 const intervalIdArr = [];
+const savedDate = localStorage.getItem('saved-date');
+const inputValueObj = {
+    inputYear: document.querySelector("#target-year-input"),
+    inputMonth: document.querySelector("#target-month-input"),
+    inputDate: document.querySelector("#target-day-input")
+};
 const dateFormMaker = () => {
-    const inputYear = document.querySelector("#target-year-input");
-    const inputYearValue = inputYear.value;
-    const inputMonth = document.querySelector("#target-month-input");
-    const inputMonthValue = inputMonth.value;
-    const inputDate = document.querySelector("#target-day-input");
-    const inputDateValue = inputDate.value;
+    var _a, _b, _c;
+    const inputYearValue = (_a = inputValueObj.inputYear) === null || _a === void 0 ? void 0 : _a.value;
+    const inputMonthValue = (_b = inputValueObj.inputMonth) === null || _b === void 0 ? void 0 : _b.value;
+    const inputDateValue = (_c = inputValueObj.inputDate) === null || _c === void 0 ? void 0 : _c.value;
     return `${inputYearValue}-${inputMonthValue}-${inputDateValue}`;
 }; // 입력한 날짜를 형식 갖춰서 데이터 추출
-const countMaker = () => {
+const countMaker = (date) => {
     const nowDate = new Date().getTime();
-    const targetDate = new Date(dateFormMaker()).setHours(0, 0, 0, 0); // 오전 9시 기준이던 것을 자정을 기준으로 변경
+    const targetDate = new Date(date).setHours(0, 0, 0, 0); // 오전 9시 기준이던 것을 자정을 기준으로 변경
     const remaining = (targetDate - nowDate) / 1000;
     // remaining (남은 시간)이 0이하이거나 유효하지 않은 값일 때의 처리 
     if (remaining <= 0) {
         message.innerHTML = '<h3>타이머가 종료되었습니다.</h3>';
+        container.style.display = 'none';
         setClearInterval(); // 초기화 버튼 누른 게 아니기 때문에 실행해줌.
+        localStorage.removeItem('saved-date');
     }
     else if (isNaN(remaining)) {
         message.innerHTML = '<h3>유효한 시간대가 아닙니다</h3>';
+        container.style.display = 'none';
         setClearInterval(); // 초기화 버튼 누른 게 아니기 때문에 실행해줌.
+        localStorage.removeItem('saved-date');
     }
     const remainingObj = {
         remainDate: Math.floor(remaining / 3600 / 24),
@@ -59,19 +67,44 @@ const countMaker = () => {
     //     (document.getElementById(tag) as HTMLSpanElement).textContent = `${remainingObj[remainKeys[i] as keyof RemainTime]}`;
     // }
 }; // 입력한 날짜와 현재 날짜와의 간격 구하기
-const starter = () => {
+const starter = (savedDate) => {
+    const date = dateFormMaker(); // 버튼 눌렀을때 입력된 값으로 countMaker를 작동시킴. 기존에 countMaker안에 있었을때에는 
+    // setInterval에 따라 계속 작동하고 있는 countMaker에서 입력값을 바꾸면 바뀐 값으로 인식해버리기 때문에 시간이 바뀌는 문제 발생. 
     message.innerHTML = '';
     container.style.display = 'flex';
-    // countMaker(); // setInterval 의 1초 뒤 실행을 기다리기 전 자체적으로 한번 먼저 실행 => 그러나 이 코드를 추가하니 setInterval이 정상작동하지 않음. 왜?
-    const intervalId = setInterval(() => countMaker(), 1000); // 변수에 담아줘도 자체 실행되는 신기한 함수..
-    intervalIdArr.push(intervalId);
+    setClearInterval();
+    console.log(date, 'date');
+    if (savedDate) { // 화면 새로고침 or 새로 창을 열었을 때 이미 저장해둔 데이터가 있다면
+        const intervalId = setInterval(() => countMaker(savedDate), 1000);
+        intervalIdArr.push(intervalId);
+    }
+    else { // 직접 입력하여 타이머 시작하면
+        // countMaker(date); // setInterval 의 1초 뒤 실행을 기다리기 전 자체적으로 한번 먼저 실행 => 그러나 이 코드를 추가하니 setInterval이 정상작동하지 않음. 왜?
+        localStorage.setItem('saved-date', date);
+        const intervalId = setInterval(() => countMaker(date), 1000); // 변수에 담아줘도 자체 실행되는 신기한 함수..
+        intervalIdArr.push(intervalId);
+    }
 };
 const setClearInterval = () => {
     for (let i = 0; i < intervalIdArr.length; i++) {
         clearInterval(intervalIdArr[i]);
     }
+};
+if (savedDate) {
+    starter(savedDate);
+} // 처음 렌더링될 때 localStorage에 저장된 값이 있으면 starter함수 실행
+else {
     container.style.display = 'none';
     message.innerHTML = '<h3>D-day를 입력해주세요.</h3>';
+}
+const resetTimer = () => {
+    container.style.display = 'none';
+    message.innerHTML = '<h3>D-day를 입력해주세요.</h3>';
+    setClearInterval();
+    localStorage.removeItem('saved-date');
+    for (let key in inputValueObj) {
+        inputValueObj[key].value = '';
+    }
 };
 // setTimeout의 실행방식에 대한 견해 
 // for (let i = 0; i<100; i++) {
