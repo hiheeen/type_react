@@ -1,0 +1,72 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  /* background-image: url('../public/images/Clear.jpg'); */
+  background-color: azure;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  min-height: 100vh;
+}
+
+h1 {
+  color: white;
+  text-shadow: 2px 2px gray;
+  opacity: 80%;
+}
+#todo-container {
+  max-width: 100%;
+  width: 400px;
+}
+
+#todo-input {
+  background-color: lightyellow;
+  border: none;
+  display: block;
+  font-size: 2rem;
+  padding: 0.5rem 2rem 0.5rem 0.5rem;
+  width: 100%;
+  opacity: 80%;
+}
+
+#todo-list {
+  list-style-type: none;
+  background-color: lightyellow;
+  margin: 0;
+  padding: 0;
+}
+
+#todo-list li {
+  border-top: 1px solid rgb(242, 242, 242);
+  font-size: 1.5rem;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  /* => 드래그 같은 거 할 수 없도록 함 */
+}
+
+.complete {
+  color: rgb(155, 155, 155);
+  text-decoration: line-through;
+}
+#delete-btn-wrapper {
+  margin-top: 1rem;
+}
+
+#delete-btn-wrapper button {
+  font-weight: bold;
+  border: none;
+  background-color: antiquewhite;
+  padding: 0.2rem 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 3px 3px gray;
+}
+#delete-btn-wrapper button:active {
+  box-shadow: none;
+  margin-left: 3px;
+  margin-top: 3px;
+}

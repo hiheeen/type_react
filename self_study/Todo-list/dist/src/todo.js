@@ -1,3 +1,12 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import axios from 'axios';
 const inputElement = document.querySelector('#todo-input');
 const toDoList = document.querySelector('#todo-list');
@@ -85,15 +94,21 @@ const deleteAll = () => {
     localStorage.removeItem('toDos');
     inputElement.value = '';
 };
-const weatherSearch = (lat, lon) => {
-    axios
-        .get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=c64bc32b1755a98826612cc0d6eaf1b1`)
-        .then((res) => console.log('res', res))
-        .catch((err) => console.error(err));
-};
+const weatherSearch = (lat, lon) => __awaiter(void 0, void 0, void 0, function* () {
+    const { data } = yield axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=c64bc32b1755a98826612cc0d6eaf1b1`);
+    return data;
+});
+// const weatherSearch = async (lat: number, lon: number) : WeatherResponse => {
+//   const data : Promise<WeatherResponse>= await axios
+//     .get(
+//       `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=c64bc32b1755a98826612cc0d6eaf1b1`
+//     )
+//     .then((res: JSON) => return res)
+//     .catch((err: Error) => console.error(err));
+// };
 const askForLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
-        weatherSearch(position.coords.latitude, position.coords.longitude);
+        console.log(weatherSearch(position.coords.latitude, position.coords.longitude));
     }, (error) => console.error(error));
 };
 askForLocation();
